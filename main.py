@@ -1,6 +1,7 @@
 import sys
 
 from jacobi import jacobi
+from gauss_seidel import gauss_seidel
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -15,7 +16,8 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QMessageBox,
     QGroupBox,
-    QScrollArea
+    QScrollArea,
+    QComboBox
 )
 
 class Ventana(QMainWindow):
@@ -123,6 +125,15 @@ class Ventana(QMainWindow):
         self.txt_iteraciones = QLineEdit("100")
         parametros_layout.addWidget(
             self.txt_iteraciones, 0, 3
+        )
+
+        parametros_layout.addWidget(
+            QLabel("Metodo de resolucion"), 0, 4
+        )
+        self.cb_metodo = QComboBox()
+        self.cb_metodo.addItems(['Jacobi','Gauss-Seidel'])
+        parametros_layout.addWidget(
+            self.cb_metodo, 0, 5
         )
 
         layout.addWidget(grupo_parametros)
@@ -329,13 +340,21 @@ class Ventana(QMainWindow):
                 self.txt_iteraciones.text()
             )
 
-            # Ejecutar modulo de Jacobi
-            solucion, salida, convergencia = jacobi(
-                A,
-                b,
-                tolerancia,
-                max_iter
-            )
+            # Ejecutar modulo de Jacobi o Gauss
+            if self.cb_metodo.currentIndex() == 0:
+                solucion, salida, convergencia = jacobi(
+                    A,
+                    b,
+                    tolerancia,
+                    max_iter
+                )
+            else:
+                solucion, salida, convergencia = gauss_seidel(
+                    A,
+                    b,
+                    tolerancia,
+                    max_iter
+                )
 
             # Mostrar resultados
             self.txt_resultados.clear()

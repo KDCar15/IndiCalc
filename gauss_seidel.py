@@ -1,6 +1,6 @@
 import validaciones as v
 
-def gauss_seidel():
+def gauss_seidel(A, b, tolerancia, max_iter):
     # 0. Inicializar variables
     salida = ""
     iteraciones = 0
@@ -21,12 +21,15 @@ def gauss_seidel():
     for k in range(max_iter):
         x_anterior = x[:]
         
-        for i in range(n):
-            if i != j:
-                if j < i:
-                    suma += A[i][j] * x[j]
-                else:
-                    suma += A[i][j] * x_anterior[j]
+        for i in range(len(b)):
+            suma = 0.0
+            for j in range(len(b)):
+                if i != j:
+                    if j < i:
+                        suma += A[i][j] * x[j]
+                    else:
+                        suma += A[i][j] * x_anterior[j]
+            x[i] = (b[i] - suma)/ A[i][i]
         error = 0.0
         for i in range(len(b)):
             diferencia = abs(x[i] - x_anterior[i])
@@ -41,11 +44,11 @@ def gauss_seidel():
         salida += f"Error: {error}\n"
         salida += "-------------------------------------\n"
         
-        if error > tolerancia:
+        iteraciones += 1
+        
+        if error < tolerancia:
             convergencia = True
             break
-
-        iteraciones += 1
 
     salida += "\n"
     salida += "-------------------------------------\n"
