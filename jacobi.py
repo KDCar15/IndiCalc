@@ -7,13 +7,17 @@ def jacobi(A, b, tolerancia, max_iter):
     # 0. Inicializacion de variables
     salida = ""
     iteraciones = 0
+    convergencia = False
 
     # 1. Validaciones
     validar, mensaje = v.validar_jacobi(A, b)
 
     if not validar:
-        salida += f"Error: {mensaje}\n"
-        return -1, salida
+        raise ValueError(mensaje)
+    if tolerancia <= 0:
+        raise ValueError("La tolerancia debe ser positiva")
+    if max_iter <= 0:
+        raise ValueError("El numero maximo de iteraciones debe ser positivo")
 
     # 2. Metodo Jacobi
     x = [0.0] * len(b)
@@ -56,6 +60,7 @@ def jacobi(A, b, tolerancia, max_iter):
 
         # Comprobar convergencia
         if error < tolerancia:
+            convergencia = True
             break
 
     # 3. Resultados
@@ -71,6 +76,10 @@ def jacobi(A, b, tolerancia, max_iter):
     salida += f"Vector X: {x}\n"
     salida += f"Iteraciones realizadas: {iteraciones}\n"
     salida += f"Error: {error}\n"
+    if(convergencia):
+        salida += f"Convergencia: Si\n"
+    else:
+        salida += f"Convergencia: No\n"
     salida += "-------------------------------------\n"
 
-    return x, salida
+    return x, salida, convergencia

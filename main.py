@@ -329,19 +329,8 @@ class Ventana(QMainWindow):
                 self.txt_iteraciones.text()
             )
 
-            # Validar parametros
-            if tolerancia <= 0:
-                raise ValueError(
-                    "La tolerancia debe ser positiva"
-                )
-
-            if max_iter <= 0:
-                raise ValueError(
-                    "Las iteraciones deben ser positivas"
-                )
-
             # Ejecutar modulo de Jacobi
-            solucion, salida = jacobi(
+            solucion, salida, convergencia = jacobi(
                 A,
                 b,
                 tolerancia,
